@@ -1,5 +1,5 @@
 # W6-api-sentiment-project
-
+![img](https://raw.githubusercontent.com/SergioCaler0/W6-api-sentiment-project/main/img/thebigbangtheory.jpg)
 ## The Big Bang Theory API
 
 Hemos creado una API que recoge las frases, lugares y personajes de la famosa serie The Big Bang Theory, de tal modo que puedes obtener:
