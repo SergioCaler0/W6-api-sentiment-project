@@ -1,5 +1,6 @@
 from pymongo import MongoClient
-
+import nltk
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 client = MongoClient()
 
 
@@ -53,52 +54,25 @@ def insertamensaje(personaje,frase):
 
 
 
+#Sentiment
 
 
-
-
-
-
-
-
-
-
-
-def mete_personaje(nombre):
-    personajes.insert_many(nombre)
-    return 'personaje bien metido'
-
-#insert_personaje("name": "Sergio")
-def user(name,search):
+def sentiment_analysis(name):
     """
-    #Checkeamos que el usuario exista en la base de datos.
-    #Es una función reutilizable para todos los checks.
-    #Devuelve TRUE si el usuario NO EXISTE
-    #Hay que indicarle a la función si buscamos por id_user o por name.
-    #Adaptar dicho return a las funciones que utilicen esta función
+    Creamos una query para obtener el analisis de polaridad de una frase
     """
-    existe = list(personajes.find({f"{search}": { "$eq": f"{name}" } }))
-    if len(existe) == 0:
-        return True
-    else:
-        return False
+
+    query = {"Speaker": f"{name}"}
+    text = list(personajes.find(query, {"_id": 0, "Speaker": 1, "Text": 1}))
+    sia = SentimentIntensityAnalyzer()
+    sentence = list(personajes.find(query, {"_id": 0, "Text": 1}))
+    extract = [i['Text'] for i in sentence]
+    polarity = sia.polarity_scores(extract[0])
+    return f'The sentiment analysis muestra: {polarity}'
 
 
-def addUser(nombre):
-    """
-    #Checkea si existe un user en la bd y lo añade si no es así.
-    """
-    checkparam = "name"
-    if user(nombre,checkparam) == True:
-        pass
-    else:
-        error = 'Ya existe un usuario con ese user_id en la base de datos'
-        raise ValueError (error)
-    query = {}
-    identity=list(personajes.find(query,{"_id":0,"name":1}))
 
-    dict_insert={
-        'user_id': f'{len(identity)}',
-        'name':nombre
-    }
-    personajes.insert_one(dict_insert)
+
+
+
+

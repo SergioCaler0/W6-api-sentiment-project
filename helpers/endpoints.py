@@ -4,7 +4,7 @@ import sys
 from app import app
 from flask import request
 from bson import json_util
-from mongoConnection import search_personaje, search_places, phrase_pers_in_loc, insertamensaje
+from mongoConnection import search_personaje, search_places, phrase_pers_in_loc, insertamensaje,sentiment_analysis
 
 """
 /personaje/create
@@ -48,3 +48,11 @@ def insert_personaje():
     return "Mensaje introducido correctamente a la base de datos"
     
 
+
+#sentiment endpoint
+
+@app.route("/sentiment/<name>")
+def analyzeSentiment(name):
+    # function to analyze if a tweet is positive or negative.
+    sentiment = sentiment_analysis(name)
+    return json_util.dumps(sentiment)
